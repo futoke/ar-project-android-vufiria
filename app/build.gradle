@@ -1,0 +1,75 @@
+apply plugin: 'com.android.application'
+
+//def VUFORIA_SDK_DIR = '/Users/daemontus/Library/Vuforia'
+//def NATIVE_LIB_DIR = 'build/lib'
+//def JAR_DIR = 'build/java/vuforia'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+    sourceSets.main {
+        jni.srcDirs = []
+//        jniLibs.srcDirs = ["$VUFORIA_SDK_DIR/$NATIVE_LIB_DIR/", "lib/"]
+        jniLibs.srcDirs = ["lib/"]
+    }
+    defaultConfig {
+        applicationId 'ru.futoke.arproject'
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+    }
+    archivesBaseName = rootProject.projectDir.getName()
+    buildTypes {
+        release {
+            minifyEnabled false
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+    }
+    productFlavors {
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+}
+
+ext {
+    gdxVersion = '1.9.5'
+}
+
+//configurations { natives }
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    //    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+    //    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    //    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    //    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    //    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+    //    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
+    //    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
+    //    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
+    //    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
+    //    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+    compile files('lib/Vuforia.jar')
+    compile 'net.lingala.zip4j:zip4j:1.3.2'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'com.badlogicgames.gdx:gdx:1.9.5'
+    compile 'com.badlogicgames.gdx:gdx-box2d:1.9.5'
+    compile 'com.badlogicgames.gdx:gdx-backend-android:1.9.5'
+    compile 'com.koushikdutta.ion:ion:2.1.9'
+}
