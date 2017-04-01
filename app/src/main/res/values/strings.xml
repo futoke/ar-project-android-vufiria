@@ -5,4 +5,5 @@
     <string name="vuforia_key">AYCBHnv/////AAAAGYXtu9h3NUPQoAU0AHDNeXNpRQD7xE4wIx7yTG4hDjGAN9buXSpYTJ+KrgiNHCbOO7kCdFZOaktUEA2yPMBehRnirmwd999gxDvEUboGhomB7tuQrYyW/30FHR1FLobwIRJdP5qpGDsUqeJbRNrC3IBvFQs/0V0hKuDLBvdtf7gmlkvnOYV5NbpuNtL2fWKa69odKAqrkbBjA1ZxozARuHrNdKLlimow/o1ma21VOf5hVYDXpyCyMxcl2MdawGrMCgukZxmlkVSyt2wOK9qz0ata1hKh0TRQabZP9kYxAHcVGx4Xd6aTVVaiPMJg/kQj2wF6QCwyXgHDQLQnAI5gJASk4NFYU3AhjiBa9wW4r0re</string>
     <string name="no_internet">Oops!! There is no internet connection. Please enable internet connection and try again.</string>
     <string name="no_list_file">Can not open the file with a list of models.</string>
+    <string name="reload_models">Reload</string>
 </resources>

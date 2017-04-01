@@ -1,20 +1,15 @@
 package ru.futoke.arproject.ar.libgdx;
 
-import android.os.Environment;
-
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
-import java.util.List;
 
+import ru.futoke.arproject.Utils;
 import ru.futoke.arproject.ar.vuforia.VuforiaRenderer;
-import ru.futoke.arproject.renderer.Utils;
 
 /**
  * Screen implementation responsible for model loading and calling renderer properly.
@@ -26,36 +21,21 @@ public class Display implements Screen {
 
     private Renderer mRenderer;
 
-    public Display(VuforiaRenderer vuforiaRenderer) {
+    public Display(VuforiaRenderer vuforiaRenderer, File modelPath) {
 
         mRenderer = new Renderer(vuforiaRenderer);
 
-        // Find models.
-        File dir = new File(
-            Environment.getExternalStorageDirectory()
-                + "/"
-                + Utils.workDirectory
-        );
-        // If File is not present create directory.
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-
-        // Find models.
-        String[] extensions = new String[] { "g3db" };
-        List<File> files = (List<File>) FileUtils.listFiles(dir, extensions, true);
-        String modelFile = files.get(0).getName();
-
-//        UBJsonReader jsonReader = new UBJsonReader();
-//        G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
-//        model = modelLoader.loadModel(Gdx.files.absolute(modelFile));
-//        modelInstance = new ModelInstance(model,0,0,0);
-
+        String modelFile = Utils.getFileByExtension("g3db", modelPath);
+        String filePath = Utils.workDir
+            + "/"
+            + modelPath.getName()
+            + "/"
+            + modelFile;
         AssetManager assets = new AssetManager(new ExternalFileHandleResolver());
-        assets.load(Utils.workDirectory + "/" + modelFile, Model.class);
+        assets.load(filePath, Model.class);
         assets.finishLoading();
 
-        model = assets.get(Utils.workDirectory + "/" + modelFile, Model.class);
+        model = assets.get(filePath, Model.class);
         modelInstance = new ModelInstance(model);
     }
 

@@ -25,6 +25,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ru.futoke.arproject.renderer.R;
 
@@ -43,7 +44,7 @@ public class Utils {
     public static final String password = "admin";
     public static final String mainUrl = "http://ar.futoke.ru";
 
-    static void downloadModelsList(Context context)
+    static void downloadModelsList(final Context context)
     {
         if (isConnectingToInternet(context)) {
             Ion.with(context)
@@ -63,6 +64,7 @@ public class Utils {
                                 output = new BufferedWriter(new FileWriter(file));
                                 output.write(result.toString());
                                 output.close();
+
                             } catch (IOException ioe) {
                                 Log.e(TAG, ioe.getLocalizedMessage());
                             }
@@ -187,8 +189,8 @@ public class Utils {
         if (dir.exists()) {
             try {
                 FileUtils.cleanDirectory(dir);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ioe) {
+                Log.e("NYAAA", ioe.getLocalizedMessage());
             }
         }
     }
@@ -214,5 +216,13 @@ public class Utils {
     {
         File[] contents = dir.listFiles();
         return contents.length == 0;
+    }
+
+    public static String getFileByExtension(String ext, File dir)
+    {
+        String[] extensions = new String[] { ext };
+        List<File> files = (List<File>) FileUtils
+            .listFiles(dir, extensions, true);
+        return files.get(0).getName();
     }
 }

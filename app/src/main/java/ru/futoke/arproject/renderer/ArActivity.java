@@ -23,6 +23,9 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
+import java.io.File;
+
+import ru.futoke.arproject.Utils;
 import ru.futoke.arproject.ar.libgdx.Engine;
 import ru.futoke.arproject.ar.vuforia.AppSession;
 import ru.futoke.arproject.ar.vuforia.SessionControl;
@@ -38,6 +41,8 @@ public class ArActivity extends AndroidApplication implements SessionControl {
 
     private DataSet posterDataSet;
     private Engine mEngine;
+    private String modelID;
+    private File modelPath;
 
     VuforiaRenderer mRenderer;
 
@@ -47,6 +52,9 @@ public class ArActivity extends AndroidApplication implements SessionControl {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar);
         Log.d(TAG, "onCreate");
+
+        modelID = getIntent().getStringExtra("MODEL_ID");
+        modelPath = Utils.getDir(Utils.workDir + "/" + modelID);
 
         session = new AppSession(this);
         session.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -60,20 +68,10 @@ public class ArActivity extends AndroidApplication implements SessionControl {
         config.useCompass = true;
         config.useGyroscope = true;
 
-        mEngine = new Engine(mRenderer);
+        mEngine = new Engine(mRenderer, modelPath);
         View glView = initializeForView(mEngine, config);
 
         container.addView(glView);
-
-//        if (isConnectingToInternet()) {
-//            new DownloadTask(this, "http://ar-project-futoke.c9users.io/load_model_file/2c85456c-190f-4d56-b6db-47480d8d3aff");
-//        } else {
-//            Toast.makeText(
-//                    this,
-//                    R.string.no_internet,
-//                    Toast.LENGTH_SHORT
-//            ).show();
-//        }
     }
 
     @Override
@@ -125,14 +123,22 @@ public class ArActivity extends AndroidApplication implements SessionControl {
             mRenderer.mIsActive = true;
 
             try {
-                session.startAR(CameraDevice.CAMERA_DIRECTION.CAMERA_DIRECTION_DEFAULT);
+                session.startAR(
+                    CameraDevice
+                        .CAMERA_DIRECTION
+                        .CAMERA_DIRECTION_DEFAULT
+                );
             } catch (VuforiaException e) {
                 Log.e(TAG, e.getString());
             }
 
-            boolean result = CameraDevice.getInstance().setFocusMode(CameraDevice.FOCUS_MODE.FOCUS_MODE_CONTINUOUSAUTO);
+            boolean result = CameraDevice
+                .getInstance()
+                .setFocusMode(CameraDevice.FOCUS_MODE.FOCUS_MODE_CONTINUOUSAUTO);
 
-            if (!result) Log.e(TAG, "Unable to enable continuous autofocus");
+            if (!result) {
+                Log.e(TAG, "Unable to enable continuous autofocus");
+            }
 
             try {
                 mEngine.resume();
@@ -141,7 +147,11 @@ public class ArActivity extends AndroidApplication implements SessionControl {
             }
 
         } else {
-            Toast.makeText(this, "Unable to start augmented reality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                this,
+                "Unable to start augmented reality.",
+                Toast.LENGTH_LONG
+            ).show();
             Log.e(TAG, exception.getString());
             finish();
         }
@@ -187,7 +197,8 @@ public class ArActivity extends AndroidApplication implements SessionControl {
     public boolean doLoadTrackersData() {
         // Get the image tracker:
         TrackerManager trackerManager = TrackerManager.getInstance();
-        ObjectTracker imageTracker = (ObjectTracker) trackerManager.getTracker(ObjectTracker.getClassType());
+        ObjectTracker imageTracker = (ObjectTracker) trackerManager
+            .getTracker(ObjectTracker.getClassType());
 
         if (imageTracker == null) {
             Log.d(TAG, "Failed to load tracking data set because the ImageTracker has not been initialized.");
@@ -201,8 +212,13 @@ public class ArActivity extends AndroidApplication implements SessionControl {
             return false;
         }
 
+        String targetFile = Utils.getFileByExtension("xml", modelPath);
+
         // Load the data sets:
-        if (!posterDataSet.load("StonesAndChips.xml", STORAGE_TYPE.STORAGE_APPRESOURCE)) {
+        if (modelPath != null && !posterDataSet.load(
+            modelPath.getPath() + "/" + targetFile,
+            STORAGE_TYPE.STORAGE_ABSOLUTE)
+        ) {
             Log.d(TAG, "Failed to load data set.");
             return false;
         }

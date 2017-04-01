@@ -5,6 +5,8 @@ import android.util.Log;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.FPSLogger;
 
+import java.io.File;
+
 import ru.futoke.arproject.ar.vuforia.VuforiaRenderer;
 
 /**
@@ -13,15 +15,17 @@ import ru.futoke.arproject.ar.vuforia.VuforiaRenderer;
 public class Engine extends Game {
 
     private FPSLogger fps;
+    private File modelPath;
     private VuforiaRenderer vuforiaRenderer;
 
-    public Engine(VuforiaRenderer vuforiaRenderer) {
+    public Engine(VuforiaRenderer vuforiaRenderer, File modelPath) {
         this.vuforiaRenderer = vuforiaRenderer;
+        this.modelPath = modelPath;
     }
 
     @Override
     public void create () {
-        Display mDisplay = new Display(vuforiaRenderer);
+        Display mDisplay = new Display(vuforiaRenderer, modelPath);
         setScreen(mDisplay);
         vuforiaRenderer.initRendering();
         fps = new FPSLogger();
@@ -30,7 +34,7 @@ public class Engine extends Game {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        Log.d("ENGINE", "Resize: "+width+"x"+height);
+        Log.d("ENGINE", "Resize: "  +width + "x"  +height);
         vuforiaRenderer.onSurfaceChanged(width, height);
     }
 
